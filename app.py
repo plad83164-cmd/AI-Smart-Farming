@@ -953,10 +953,10 @@ def disease_detection():
 
 
             # MODEL PREDICTION
-            predictions = model.predict(
+            predictions = model(
                 image_array,
-                verbose=0
-            )
+                training=False
+            ).numpy()
 
 
             # GET PREDICTED CLASS
