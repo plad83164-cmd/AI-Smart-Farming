@@ -270,10 +270,12 @@ def login():
 
 def get_db_connection():
     return mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password="",
-        database="Smart_farmings"
+        host=os.getenv("DB_HOST"),
+        port=int(os.getenv("DB_PORT", "3306")),
+        user=os.getenv("DB_USER"),
+        password=os.getenv("DB_PASSWORD"),
+        database=os.getenv("DB_NAME"),
+        ssl_disabled=False
     )
 @app.route("/register", methods=["GET", "POST"])
 def register():
