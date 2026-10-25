@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat History - Smart Farming</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f7f0;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: auto;
+        }
+
+        h1 {
+            color: #237a3b;
+            text-align: center;
+        }
+
+        .chat-card {
+            background: white;
+            padding: 18px;
+            margin: 18px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px #00000015;
+            overflow-wrap: anywhere;
+        }
+
+        .question {
+            color: #174f2a;
+            font-weight: bold;
+        }
+
+        .answer {
+            white-space: pre-wrap;
+            line-height: 1.6;
+        }
+
+        .date {
+            color: #777;
+            font-size: 13px;
+        }
+
+        .links {
+            text-align: center;
+            margin: 20px;
+        }
+
+        a {
+            color: #237a3b;
+            margin: 0 10px;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 30px;
+            background: white;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>💬 Chat History</h1>
+
+        <div class="links">
+            <a href="{{ url_for('ai_assistant') }}">AI Assistant</a>
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </div>
+
+        {% if chats %}
+            {% for chat in chats %}
+                <div class="chat-card">
+                    <p class="date">
+                        {{ chat.created_at }}
+                    </p>
+
+                    <p class="question">
+                        You: {{ chat.question }}
+                    </p>
+
+                    <p class="answer">
+                        AI: {{ chat.answer }}
+                    </p>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty">
+                <p>No chat history found.</p>
+                <p>Ask a question in AI Assistant to see it here.</p>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>

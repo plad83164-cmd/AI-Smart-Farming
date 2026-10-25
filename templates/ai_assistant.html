@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Farming Assistant</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f8f4;
+            color: #333;
+        }
+
+        nav {
+            background: #2e7d32;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .logo {
+            color: white;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .nav-links a:hover {
+            color: #c8e6c9;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .title {
+            text-align: center;
+            color: #2e7d32;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .disease-context {
+            background: #e8f5e9;
+            border-left: 5px solid #2e7d32;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #2e7d32;
+            line-height: 1.6;
+        }
+
+        .chat-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background: #2e7d32;
+            color: white;
+            padding: 18px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .chat-box {
+            height: 420px;
+            overflow-y: auto;
+            padding: 20px;
+            background: #fafafa;
+        }
+
+        .message {
+            max-width: 82%;
+            padding: 13px 16px;
+            margin-bottom: 15px;
+            border-radius: 12px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
+
+        .bot-message {
+            background: #e8f5e9;
+            color: #333;
+            border-left: 4px solid #2e7d32;
+            margin-right: auto;
+        }
+
+        .user-message {
+            background: #2e7d32;
+            color: white;
+            margin-left: auto;
+            border-radius: 12px 12px 2px 12px;
+        }
+
+        .typing {
+            color: #777;
+            font-style: italic;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .suggestions {
+            padding: 15px;
+            background: white;
+            border-top: 1px solid #ddd;
+            text-align: center;
+        }
+
+        .suggestions p {
+            margin-bottom: 10px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .suggestion-btn {
+            border: 1px solid #2e7d32;
+            background: white;
+            color: #2e7d32;
+            padding: 8px 12px;
+            margin: 4px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .suggestion-btn:hover {
+            background: #2e7d32;
+            color: white;
+        }
+
+        .input-area {
+            display: flex;
+            padding: 15px;
+            background: white;
+            border-top: 1px solid #ddd;
+            gap: 10px;
+        }
+
+        #question {
+            flex: 1;
+            min-width: 0;
+            padding: 13px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            outline: none;
+            font-size: 15px;
+        }
+
+        #question:focus {
+            border-color: #2e7d32;
+        }
+
+        .send-btn {
+            background: #2e7d32;
+            color: white;
+            border: none;
+            padding: 12px 22px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .send-btn:hover {
+            background: #1b5e20;
+        }
+
+        .send-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            margin-top: 50px;
+            background: #2e7d32;
+            color: white;
+        }
+
+        @media (max-width: 600px) {
+            nav {
+                padding: 15px 20px;
+            }
+
+            .nav-links {
+                gap: 12px;
+            }
+
+            .container {
+                margin: 20px auto;
+                padding: 15px;
+            }
+
+            .title {
+                font-size: 26px;
+            }
+
+            .chat-box {
+                height: 380px;
+            }
+
+            .input-area {
+                flex-direction: column;
+            }
+
+            .send-btn {
+                width: 100%;
+            }
+
+            .message {
+                max-width: 95%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<nav>
+    <div class="logo">🌱 Smart Farming</div>
+
+    <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/disease-detection">Disease Detection</a>
+        <a href="/ai-assistant">🤖 AI Assistant</a>
+        <a href="{{ url_for('chat_history') }}">Chat History</a>
+        <a href="/logout">Logout</a>
+    </div>
+</nav>
+
+<div class="container">
+
+    <h1 class="title">🤖 AI Farming Assistant</h1>
+
+    <p class="subtitle">
+        Ask me about farming, crops, diseases, weather,
+        watering, fertilizer and plant care.
+    </p>
+
+    {% if disease %}
+    <div class="disease-context">
+        🌿 Detected Disease: <strong>{{ disease }}</strong>
+        <br>
+        Ask me about its symptoms, treatment or prevention.
+    </div>
+    {% endif %}
+
+    <div class="chat-container">
+
+        <div class="chat-header">
+            🌱 Smart Farming AI Assistant
+        </div>
+
+        <div class="chat-box" id="chatBox" aria-live="polite">
+            <div class="message bot-message">
+                👋 Hello Farmer! 🌱
+
+                I am your Smart Farming Assistant.
+
+                You can ask me about:
+                🌦️ Weather and climate
+                💧 Watering
+                🌱 Fertilizer
+                🐛 Pests
+                🦠 Plant diseases
+                🍃 Yellow leaves
+                🌿 Plant care
+
+                Example: What is the weather in Pune?
+            </div>
+        </div>
+
+        <div class="suggestions">
+            <p>💡 Quick Questions</p>
+
+            <button type="button" class="suggestion-btn"
+                onclick="askSuggestion('What is the weather in Pune?')">
+                🌦️ Weather
+            </button>
+
+            <button type="button" class="suggestion-btn"
+                onclick="askSuggestion('What is the temperature in Mumbai?')">
+                🌡️ Temperature
+            </button>
+
+            <button type="button" class="suggestion-btn"
+                onclick="askSuggestion('How should I water my plant?')">
+                💧 Watering
+            </button>
+
+            <button type="button" class="suggestion-btn"
+                onclick="askSuggestion('Which fertilizer should I use?')">
+                🌱 Fertilizer
+            </button>
+
+            <button type="button" class="suggestion-btn"
+                onclick="askSuggestion('Why are my leaves yellow?')">
+                🍃 Yellow Leaves
+            </button>
+
+            <button type="button" class="suggestion-btn"
+                onclick="askSuggestion('Tell me about Early blight')">
+                🦠 Disease
+            </button>
+
+            <button type="button" class="suggestion-btn"
+                onclick="askSuggestion('How can I take care of my plant?')">
+                🌿 Plant Care
+            </button>
+        </div>
+
+        <form id="chatForm" class="input-area">
+            <input
+                type="text"
+                id="question"
+                name="question"
+                placeholder="Ask your farming question..."
+                autocomplete="off"
+                required
+            >
+
+            <button type="submit" class="send-btn" id="sendBtn">
+                Send ➤
+            </button>
+        </form>
+
+    </div>
+</div>
+
+<footer>
+    <p>© 2026 AI Based Smart Farming Disease Advisor &amp; Detector</p>
+</footer>
+
+<script>
+    const chatForm = document.getElementById("chatForm");
+    const questionInput = document.getElementById("question");
+    const chatBox = document.getElementById("chatBox");
+    const sendBtn = document.getElementById("sendBtn");
+
+    const detectedDisease = {{ disease|default('', true)|tojson }};
+
+    function addMessage(message, className) {
+        const messageDiv = document.createElement("div");
+        messageDiv.className = "message " + className;
+        messageDiv.textContent = message;
+        chatBox.appendChild(messageDiv);
+        chatBox.scrollTop = chatBox.scrollHeight;
+        return messageDiv;
+    }
+
+    function showTyping() {
+        removeTyping();
+
+        const typing = document.createElement("div");
+        typing.id = "typing";
+        typing.className = "typing";
+        typing.textContent = "🤖 AI is thinking...";
+        chatBox.appendChild(typing);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function removeTyping() {
+        const typing = document.getElementById("typing");
+        if (typing) {
+            typing.remove();
+        }
+    }
+
+    async function sendQuestion(question) {
+        question = question.trim();
+
+        if (!question || sendBtn.disabled) {
+            return;
+        }
+
+        // Keep the question in the input until a successful response.
+        addMessage(question, "user-message");
+        showTyping();
+
+        sendBtn.disabled = true;
+        sendBtn.textContent = "Sending...";
+
+        try {
+            const formData = new FormData();
+            formData.append("question", question);
+
+            const response = await fetch("/ask-ai", {
+                method: "POST",
+                body: formData,
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest"
+                }
+            });
+
+            const answer = await response.text();
+
+            removeTyping();
+
+            if (!response.ok) {
+                throw new Error(
+                    "Server returned status " + response.status +
+                    (answer ? ": " + answer.slice(0, 250) : "")
+                );
+            }
+
+            // A login page returned as HTML is not an AI answer.
+            if (answer.trim().toLowerCase().startsWith("<!doctype html") ||
+                answer.trim().toLowerCase().startsWith("<html")) {
+                throw new Error(
+                    "Server returned a web page instead of an answer. Check the /ask-ai Flask route and login session."
+                );
+            }
+
+            addMessage(answer || "Sorry, I received an empty response.", "bot-message");
+
+            // Clear only after a successful response.
+            questionInput.value = "";
+
+        } catch (error) {
+            removeTyping();
+            console.error("AI Assistant error:", error);
+
+            addMessage(
+                "⚠️ Your question was not answered. It is still in the input box. Please try again. If the issue continues, check the Flask terminal for the /ask-ai error.",
+                "bot-message"
+            );
+
+        } finally {
+            sendBtn.disabled = false;
+            sendBtn.textContent = "Send ➤";
+            questionInput.focus();
+        }
+    }
+
+    chatForm.addEventListener("submit", function(event) {
+        event.preventDefault();
+        sendQuestion(questionInput.value);
+    });
+
+    function askSuggestion(question) {
+        if (sendBtn.disabled) {
+            return;
+        }
+
+        questionInput.value = question;
+        sendQuestion(question);
+    }
+
+    questionInput.addEventListener("keydown", function(event) {
+        if (event.key === "Enter" && !event.shiftKey) {
+            event.preventDefault();
+            chatForm.requestSubmit();
+        }
+    });
+
+    window.addEventListener("load", function() {
+        if (detectedDisease && detectedDisease.trim() !== "") {
+            setTimeout(function() {
+                addMessage(
+                    "🌿 The detected disease is " + detectedDisease +
+                    ". You can ask about its symptoms, treatment or prevention.",
+                    "bot-message"
+                );
+            }, 500);
+        }
+    });
+</script>
+
+</body>
+</html>

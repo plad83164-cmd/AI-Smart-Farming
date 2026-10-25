@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="{{ 'mr' if current_language == 'mr' else 'en' }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ 'नोंदणी | स्मार्ट शेती' if current_language == 'mr' else 'Register | SmartFarm AI' }}</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background: #edf7ed;
+            color: #26382a;
+        }
+
+        .register-box {
+            width: 100%;
+            max-width: 460px;
+            background: white;
+            padding: 30px;
+            border-radius: 18px;
+            box-shadow: 0 5px 25px rgba(0,0,0,.10);
+        }
+
+        .logo {
+            text-align: center;
+            font-size: 42px;
+            margin-bottom: 8px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #176b36;
+            font-size: 27px;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 22px;
+            line-height: 1.5;
+        }
+
+        .language {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .language a {
+            text-decoration: none;
+            color: #176b36;
+            font-weight: bold;
+        }
+
+        .language a.active {
+            text-decoration: underline;
+        }
+
+        label {
+            display: block;
+            margin: 13px 0 6px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccd8cc;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        input:focus {
+            outline: 2px solid #76bb86;
+            border-color: #218342;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 22px;
+            padding: 13px;
+            background: #218342;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #145d2c;
+        }
+
+        .message {
+            margin-top: 12px;
+            color: #b3261e;
+            text-align: center;
+        }
+
+        .bottom {
+            text-align: center;
+            margin-top: 20px;
+            line-height: 1.8;
+        }
+
+        .bottom a,
+        .home {
+            color: #176b36;
+            font-weight: bold;
+        }
+
+        .home {
+            display: block;
+            text-align: center;
+            margin-top: 14px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+<div class="register-box">
+
+    <div class="logo">🌱</div>
+
+    <h1>
+        {{ 'शेतकरी नोंदणी' if current_language == 'mr' else 'Farmer Registration' }}
+    </h1>
+
+    <p class="subtitle">
+        {{ 'तुमचे नवीन खाते तयार करा.' if current_language == 'mr' else 'Create your SmartFarm AI account.' }}
+    </p>
+
+    <div class="language">
+        <a href="{{ url_for('set_language', lang='en') }}"
+           class="{{ 'active' if current_language == 'en' else '' }}">English</a>
+        <span>|</span>
+        <a href="{{ url_for('set_language', lang='mr') }}"
+           class="{{ 'active' if current_language == 'mr' else '' }}">मराठी</a>
+    </div>
+
+    <form method="POST" action="{{ url_for('register') }}">
+
+        <label for="name">
+            {{ 'पूर्ण नाव' if current_language == 'mr' else 'Full Name' }}
+        </label>
+        <input type="text" id="name" name="name"
+               placeholder="{{ 'तुमचे पूर्ण नाव टाका' if current_language == 'mr' else 'Enter your full name' }}"
+               autocomplete="name" required>
+
+        <label for="email">
+            {{ 'ईमेल पत्ता' if current_language == 'mr' else 'Email Address' }}
+        </label>
+        <input type="email" id="email" name="email"
+               placeholder="{{ 'तुमचा ईमेल टाका' if current_language == 'mr' else 'Enter your email' }}"
+               autocomplete="email" required>
+
+        <label for="mobile">
+            {{ 'मोबाइल नंबर' if current_language == 'mr' else 'Mobile Number' }}
+        </label>
+        <input type="tel" id="mobile" name="mobile"
+               placeholder="{{ 'तुमचा मोबाइल नंबर टाका' if current_language == 'mr' else 'Enter your mobile number' }}"
+               autocomplete="tel" required>
+
+        <label for="password">
+            {{ 'पासवर्ड' if current_language == 'mr' else 'Password' }}
+        </label>
+        <input type="password" id="password" name="password"
+               placeholder="{{ 'पासवर्ड तयार करा' if current_language == 'mr' else 'Create a password' }}"
+               autocomplete="new-password" required>
+
+        <label for="confirm_password">
+            {{ 'पासवर्ड पुन्हा टाका' if current_language == 'mr' else 'Confirm Password' }}
+        </label>
+        <input type="password" id="confirm_password" name="confirm_password"
+               placeholder="{{ 'पासवर्ड पुन्हा टाका' if current_language == 'mr' else 'Re-enter your password' }}"
+               autocomplete="new-password" required>
+
+        <button type="submit">
+            {{ 'नोंदणी करा' if current_language == 'mr' else 'Create Account' }}
+        </button>
+    </form>
+
+    {% if error %}
+        <p class="message">{{ error }}</p>
+    {% endif %}
+
+    <div class="bottom">
+        {{ 'आधीच खाते आहे?' if current_language == 'mr' else 'Already have an account?' }}
+        <a href="{{ url_for('login') }}">
+            {{ 'लॉगिन करा' if current_language == 'mr' else 'Login' }}
+        </a>
+    </div>
+
+    <a class="home" href="/">
+        {{ 'मुख्य पानावर जा' if current_language == 'mr' else 'Go to Home' }}
+    </a>
+
+</div>
+</body>
+</html>

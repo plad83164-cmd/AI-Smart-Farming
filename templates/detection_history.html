@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detection History | Smart Farming</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f1f8f2;
+            margin: 0;
+            padding: 20px;
+            color: #243b2a;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 30px auto;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px #00000015;
+        }
+
+        h1 {
+            color: #217a3b;
+            text-align: center;
+        }
+
+        .nav {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .nav a {
+            display: inline-block;
+            margin: 5px;
+            padding: 10px 14px;
+            background: #217a3b;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background: #217a3b;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background: #f3f8f3;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 25px;
+        }
+
+        .note {
+            font-size: 13px;
+            color: #666;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+
+        <h1>🌱 Detection History</h1>
+
+        <div class="nav">
+            <a href="/">Home</a>
+            <a href="/disease-detection">Detect Disease</a>
+            <a href="/ai-assistant">AI Assistant</a>
+        </div>
+
+        {% if history %}
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>Image Name</th>
+                        <th>Disease</th>
+                        <th>Confidence</th>
+                        <th>Date & Time</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for item in history %}
+                    <tr>
+                        <td>{{ item["id"] }}</td>
+                        <td>{{ item["image_name"] }}</td>
+                        <td>{{ item["disease"] }}</td>
+                        <td>{{ item["confidence"] }}%</td>
+                        <td>{{ item["detected_at"] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+            <div class="empty">
+                <h3>No detection history found.</h3>
+                <p>Upload a plant leaf image to start detecting diseases.</p>
+            </div>
+        {% endif %}
+
+        <p class="note">
+            Note: Confidence is the model's prediction score and does not
+            guarantee that the diagnosis is correct.
+        </p>
+
+    </div>
+</body>
+</html>

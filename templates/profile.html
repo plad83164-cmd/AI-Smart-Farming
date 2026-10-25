@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - Smart Farming</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f7f0;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .profile-card {
+            max-width: 500px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px #00000015;
+        }
+
+        h1 {
+            color: #237a3b;
+            text-align: center;
+        }
+
+        .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #237a3b;
+            color: white;
+            font-size: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px auto;
+        }
+
+        .detail {
+            padding: 12px;
+            margin: 10px 0;
+            background: #f5f9f4;
+            border-radius: 8px;
+            overflow-wrap: anywhere;
+        }
+
+        .label {
+            color: #237a3b;
+            font-weight: bold;
+        }
+
+        .links {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        a {
+            display: inline-block;
+            margin: 6px;
+            padding: 10px 15px;
+            background: #237a3b;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="profile-card">
+        <h1>👨‍🌾 My Profile</h1>
+
+        <div class="avatar">
+            {{ user.name[0]|upper }}
+        </div>
+
+        <div class="detail">
+            <span class="label">Name:</span>
+            {{ user.name }}
+        </div>
+
+        <div class="detail">
+            <span class="label">Email:</span>
+            {{ user.email }}
+        </div>
+
+        <div class="detail">
+            <span class="label">Mobile:</span>
+            {{ user.mobile or 'Not provided' }}
+        </div>
+
+        <div class="detail">
+            <span class="label">Account Created:</span>
+            {{ user.created_at }}
+        </div>
+
+        <div class="links">
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </div>
+    </div>
+</body>
+</html>

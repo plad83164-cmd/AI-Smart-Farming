@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="{{ 'mr' if current_language == 'mr' else 'en' }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartFarm AI | Dashboard</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f2f7f0;
+            color: #26382a;
+        }
+
+        header {
+            background: #176b36;
+            color: white;
+            padding: 18px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        header h2 {
+            margin: 0;
+        }
+
+        nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+        }
+
+        header nav a,
+        .language-switcher a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        header nav a:hover,
+        .language-switcher a:hover {
+            color: #d7ffd9;
+        }
+
+        .language-switcher {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            background: rgba(255,255,255,0.12);
+            padding: 9px 12px;
+            border-radius: 8px;
+        }
+
+        .language-switcher a.active {
+            color: #d7ffd9;
+            text-decoration: underline;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+
+        .welcome {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            border-left: 6px solid #239447;
+            box-shadow: 0 3px 12px rgba(0,0,0,.08);
+        }
+
+        .welcome h1 {
+            color: #176b36;
+            margin-bottom: 12px;
+        }
+
+        .welcome p {
+            line-height: 1.7;
+            margin-bottom: 8px;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 22px;
+            border-radius: 15px;
+            box-shadow: 0 3px 12px rgba(0,0,0,.08);
+            transition: .3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .emoji {
+            font-size: 38px;
+            margin-bottom: 10px;
+        }
+
+        .card h3 {
+            color: #176b36;
+            margin-bottom: 10px;
+        }
+
+        .card p {
+            color: #555;
+            line-height: 1.7;
+            margin-bottom: 15px;
+        }
+
+        .card a {
+            display: inline-block;
+            background: #218342;
+            color: white;
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .card a:hover {
+            background: #145d2c;
+        }
+
+        .logout-area {
+            text-align: center;
+            margin: 25px;
+        }
+
+        .logout-area a {
+            display: inline-block;
+            background: #b52b2b;
+            color: white;
+            padding: 10px 18px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #666;
+        }
+
+        @media (max-width: 650px) {
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            nav {
+                gap: 12px;
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            .welcome {
+                padding: 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h2>🌱 SmartFarm AI</h2>
+
+    <nav>
+        <a href="/">{{ t["home"] }}</a>
+        <a href="{{ url_for('dashboard') }}">{{ t["dashboard"] }}</a>
+        <a href="/disease-detection">{{ t["disease_detection"] }}</a>
+        <a href="/detection-history">
+            {% if current_language == 'mr' %}तपासणी इतिहास{% else %}Detection History{% endif %}
+        </a>
+        <a href="/ai-assistant">{{ t["ai_assistant"] }}</a>
+        <a href="{{ url_for('profile') }}">{{ t["my_profile"] }}</a>
+    </nav>
+
+    <div class="language-switcher">
+        <a href="{{ url_for('set_language', lang='en') }}"
+           class="{{ 'active' if current_language == 'en' else '' }}">
+            English
+        </a>
+
+        <span>|</span>
+
+        <a href="{{ url_for('set_language', lang='mr') }}"
+           class="{{ 'active' if current_language == 'mr' else '' }}">
+            मराठी
+        </a>
+    </div>
+</header>
+
+<div class="container">
+
+    <section class="welcome">
+        <h1>
+            🌾
+            {% if current_language == 'mr' %}
+                {{ t["welcome"] }}
+            {% else %}
+                Farmer Dashboard
+            {% endif %}
+        </h1>
+
+        {% if current_language == 'mr' %}
+            <p>तुमच्या स्मार्ट शेती डॅशबोर्डमध्ये स्वागत आहे.</p>
+            <p>पिकांचे रोग ओळखा, तपासणी इतिहास पहा, हवामान तपासा आणि एआय शेती सहाय्यकाचा वापर करा.</p>
+        {% else %}
+            <p>Welcome to your Smart Farming Dashboard.</p>
+            <p>Detect diseases, view history, check weather and use the AI Farming Assistant from one place.</p>
+        {% endif %}
+    </section>
+
+    <section class="cards">
+
+        <div class="card">
+            <div class="emoji">🔬</div>
+            <h3>{{ t["disease_detection"] }}</h3>
+            <p>
+                {% if current_language == 'mr' %}
+                    पिकाच्या पानाचा फोटो अपलोड करून रोग ओळखा.
+                {% else %}
+                    Upload a tomato leaf image and detect diseases using AI.
+                {% endif %}
+            </p>
+            <a href="/disease-detection">
+                {% if current_language == 'mr' %}रोग ओळखा{% else %}Detect Now{% endif %}
+            </a>
+        </div>
+
+        <div class="card">
+            <div class="emoji">📋</div>
+            <h3>
+                {% if current_language == 'mr' %}तपासणी इतिहास{% else %}Detection History{% endif %}
+            </h3>
+            <p>
+                {% if current_language == 'mr' %}
+                    यापूर्वी केलेल्या रोग तपासण्यांचे रेकॉर्ड पहा.
+                {% else %}
+                    View your previous disease detection records.
+                {% endif %}
+            </p>
+            <a href="/detection-history">
+                {% if current_language == 'mr' %}इतिहास पहा{% else %}View History{% endif %}
+            </a>
+        </div>
+
+        <div class="card">
+            <div class="emoji">🤖</div>
+            <h3>{{ t["ai_assistant"] }}</h3>
+            <p>
+                {% if current_language == 'mr' %}
+                    पिके, रोग, बियाणे, खत आणि शेतीविषयी प्रश्न विचारा.
+                {% else %}
+                    Ask questions about crops, diseases, seeds, fertilizer and farming.
+                {% endif %}
+            </p>
+            <a href="/ai-assistant">
+                {% if current_language == 'mr' %}प्रश्न विचारा{% else %}Ask Now{% endif %}
+            </a>
+        </div>
+
+        <div class="card">
+            <div class="emoji">🌦️</div>
+            <h3>
+                {% if current_language == 'mr' %}हवामान{% else %}Weather{% endif %}
+            </h3>
+            <p>
+                {% if current_language == 'mr' %}
+                    तुमच्या परिसरातील हवामानाची माहिती मिळवा.
+                {% else %}
+                    Get weather information for your area.
+                {% endif %}
+            </p>
+            <a href="/ai-assistant">
+                {% if current_language == 'mr' %}हवामान तपासा{% else %}Check Weather{% endif %}
+            </a>
+        </div>
+
+        <div class="card">
+            <div class="emoji">👤</div>
+            <h3>{{ t["my_profile"] }}</h3>
+            <p>
+                {% if current_language == 'mr' %}
+                    तुमचे नाव आणि वैयक्तिक माहिती पहा.
+                {% else %}
+                    View your name and personal profile information.
+                {% endif %}
+            </p>
+            <a href="{{ url_for('profile') }}">
+                {% if current_language == 'mr' %}माहिती पहा{% else %}View Profile{% endif %}
+            </a>
+        </div>
+
+        <div class="card">
+            <div class="emoji">🌱</div>
+            <h3>
+                {% if current_language == 'mr' %}पीक मार्गदर्शन{% else %}Crop Guidance{% endif %}
+            </h3>
+            <p>
+                {% if current_language == 'mr' %}
+                    बियाणे, पेरणी, खत आणि सिंचनाविषयी मार्गदर्शन मिळवा.
+                {% else %}
+                    Get guidance on seeds, sowing, fertilizer and irrigation.
+                {% endif %}
+            </p>
+            <a href="/ai-assistant">
+                {% if current_language == 'mr' %}मार्गदर्शन मिळवा{% else %}Explore{% endif %}
+            </a>
+        </div>
+
+    </section>
+
+</div>
+
+<footer>
+    <p>
+        {% if current_language == 'mr' %}
+            © २०२६ स्मार्ट शेती | एआय आधारित पीक रोग सल्लागार आणि शोध प्रणाली
+        {% else %}
+            © 2026 SmartFarm AI | AI-Based Smart Farming Disease Advisor & Detector
+        {% endif %}
+    </p>
+</footer>
+
+<div class="logout-area">
+    <a href="{{ url_for('logout') }}">{{ t["logout"] }}</a>
+</div>
+
+</body>
+</html>

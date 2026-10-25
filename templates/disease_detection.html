@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>🌿 Disease Detection | Smart Farming</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f8f4;
+            color: #333;
+        }
+
+        /* ================= NAVBAR ================= */
+
+        nav {
+            background: #2e7d32;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            color: white;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .nav-links a:hover {
+            color: #c8e6c9;
+        }
+
+        /* ================= MAIN ================= */
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .title {
+            text-align: center;
+            color: #2e7d32;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        /* ================= UPLOAD CARD ================= */
+
+        .upload-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+
+        .upload-card h2 {
+            color: #2e7d32;
+            margin-bottom: 20px;
+        }
+
+        input[type="file"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px dashed #81c784;
+            border-radius: 8px;
+            background: #f9fff9;
+            margin-bottom: 20px;
+        }
+
+        .preview {
+            display: none;
+            max-width: 300px;
+            max-height: 300px;
+            margin: 20px auto;
+            border-radius: 10px;
+            border: 3px solid #c8e6c9;
+        }
+
+        .detect-btn {
+            background: #2e7d32;
+            color: white;
+            border: none;
+            padding: 13px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .detect-btn:hover {
+            background: #1b5e20;
+        }
+
+        /* ================= RESULT ================= */
+
+        .result-card {
+            background: white;
+            margin-top: 30px;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        .result-title {
+            text-align: center;
+            color: #2e7d32;
+            margin-bottom: 25px;
+        }
+
+        .disease-name {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #c62828;
+            margin-bottom: 10px;
+        }
+
+        .confidence {
+            text-align: center;
+            font-size: 18px;
+            color: #555;
+            margin-bottom: 25px;
+        }
+
+        .info-box {
+            background: #f8fff8;
+            padding: 20px;
+            margin-top: 15px;
+            border-left: 5px solid #2e7d32;
+            border-radius: 8px;
+        }
+
+        .info-box h3 {
+            color: #2e7d32;
+            margin-bottom: 10px;
+        }
+
+        .info-box p {
+            line-height: 1.6;
+        }
+
+        /* ================= ASK AI BUTTON ================= */
+
+        .ai-button-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .ask-ai-btn {
+            display: inline-block;
+            padding: 14px 25px;
+            background: #2e7d32;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .ask-ai-btn:hover {
+            background: #1b5e20;
+            transform: translateY(-2px);
+        }
+
+        /* ================= FOOTER ================= */
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            margin-top: 50px;
+            background: #2e7d32;
+            color: white;
+        }
+
+        /* ================= MOBILE ================= */
+
+        @media (max-width: 600px) {
+
+            nav {
+                padding: 15px 20px;
+            }
+
+            .nav-links {
+                margin-top: 10px;
+                gap: 12px;
+            }
+
+            .container {
+                margin: 20px auto;
+                padding: 15px;
+            }
+
+            .title {
+                font-size: 26px;
+            }
+
+            .disease-name {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ================= NAVBAR ================= -->
+
+    <nav>
+
+        <div class="logo">
+            🌱 Smart Farming
+        </div>
+
+        <div class="nav-links">
+
+            <a href="/">Home</a>
+
+            <a href="/disease-detection">
+                Disease Detection
+            </a>
+
+            <a href="/ai-assistant">
+                🤖 AI Assistant
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <!-- ================= MAIN CONTAINER ================= -->
+
+    <div class="container">
+
+        <h1 class="title">
+            🌿 Plant Disease Detection
+        </h1>
+
+        <p class="subtitle">
+            Upload a tomato leaf image and let AI detect the disease.
+        </p>
+
+
+        <!-- ================= UPLOAD CARD ================= -->
+
+        <div class="upload-card">
+
+            <h2>
+                📷 Upload Leaf Image
+            </h2>
+
+            <form
+                action="/disease-detection"
+                method="POST"
+                enctype="multipart/form-data"
+            >
+
+                <input
+                    type="file"
+                    name="image"
+                    id="imageInput"
+                    accept="image/*"
+                    required
+                >
+
+                <img
+                    id="previewImage"
+                    class="preview"
+                    alt="Image Preview"
+                >
+
+                <br>
+
+                <button
+                    type="submit"
+                    class="detect-btn"
+                >
+                    🔍 Detect Disease
+                </button>
+
+            </form>
+
+        </div>
+
+
+        <!-- ================= RESULT ================= -->
+
+        {% if disease %}
+
+        <div class="result-card">
+
+            <h2 class="result-title">
+                🔬 Detection Result
+            </h2>
+
+
+            <div class="disease-name">
+                {{ disease }}
+            </div>
+
+
+            {% if confidence %}
+
+            <div class="confidence">
+                Confidence:
+                <strong>{{ confidence }}%</strong>
+            </div>
+
+            {% endif %}
+
+
+            <!-- SYMPTOMS -->
+
+            {% if symptoms %}
+
+            <div class="info-box">
+
+                <h3>
+                    🩺 Symptoms
+                </h3>
+
+                <p>
+                    {{ symptoms }}
+                </p>
+
+            </div>
+
+            {% endif %}
+
+
+            <!-- TREATMENT -->
+
+            {% if treatment %}
+
+            <div class="info-box">
+
+                <h3>
+                    💊 Treatment
+                </h3>
+
+                <p>
+                    {{ treatment }}
+                </p>
+
+            </div>
+
+            {% endif %}
+
+
+            <!-- PREVENTION -->
+
+            {% if prevention %}
+
+            <div class="info-box">
+
+                <h3>
+                    🛡️ Prevention
+                </h3>
+
+                <p>
+                    {{ prevention }}
+                </p>
+
+            </div>
+
+            {% endif %}
+
+
+            <!-- ================= ASK AI ================= -->
+
+            <div class="ai-button-container">
+
+                <a
+                    href="/ai-assistant?disease={{ disease }}"
+                    class="ask-ai-btn"
+                >
+                    🤖 Ask AI About This Disease
+                </a>
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer>
+
+        <p>
+            © 2026 AI Based Smart Farming Disease Advisor & Detector
+        </p>
+
+    </footer>
+
+
+    <!-- ================= JAVASCRIPT ================= -->
+
+    <script>
+
+        const imageInput =
+            document.getElementById("imageInput");
+
+        const previewImage =
+            document.getElementById("previewImage");
+
+
+        imageInput.addEventListener(
+            "change",
+            function () {
+
+                const file = this.files[0];
+
+                if (file) {
+
+                    const reader =
+                        new FileReader();
+
+                    reader.onload =
+                        function (event) {
+
+                            previewImage.src =
+                                event.target.result;
+
+                            previewImage.style.display =
+                                "block";
+
+                        };
+
+                    reader.readAsDataURL(file);
+
+                }
+
+            }
+        );
+
+    </script>
+
+</body>
+</html>
