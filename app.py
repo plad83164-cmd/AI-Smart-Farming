@@ -954,11 +954,13 @@ def disease_detection():
 
 
             # MODEL PREDICTION
+            print("DEBUG: Starting disease prediction", flush=True)
             start_time = time.time()
             predictions = model(
                 image_array,
                 training=False
             ).numpy()
+            print("DEBUG: Disease prediction finished", flush=True)
             print("Prediction time: ",time.time()-start_time)
 
 
