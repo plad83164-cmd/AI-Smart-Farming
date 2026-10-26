@@ -90,6 +90,8 @@ def save_detection(image_name, disease, confidence):
     conn.close()
 
 MODEL_PATH = "tomato_disease_model.keras"
+tf.config.threading.set_intra_op_parallel ism_threads(1)
+tf.config.threading.set_inter_op_parallel ism_threads(1)
 model = tf.keras.models.load_model(MODEL_PATH)
 
 class_names = [
