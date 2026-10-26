@@ -2,6 +2,7 @@ from flask import Flask, render_template, request
 from flask import session, redirect, url_for
 import tensorflow as tf
 import numpy as np
+import time 
 from PIL import Image
 import os
 import requests
@@ -953,10 +954,12 @@ def disease_detection():
 
 
             # MODEL PREDICTION
+            start_time = time.time()
             predictions = model(
                 image_array,
                 training=False
             ).numpy()
+            print("Prediction time: ",time.time()-start_time)
 
 
             # GET PREDICTED CLASS
