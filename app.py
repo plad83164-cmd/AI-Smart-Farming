@@ -19,9 +19,13 @@ OPENWEATHER_API_KEY = os.getenv("OPENWEATHER_API_KEY")
 
 app = Flask(__name__)
 
-app.secret_key = os.environ.get(
-    "FLASK_SECRET_KEY",
-    "dev-only-change-this-secret"
+app.secret_key = os.environ.get("FLASK_SECRET_KEY")
+if not app.secret_key:
+    raise RuntimeError("FLASK_SECRET_KEY if not configured")
+app.config.update(
+    SESSION_COOKIE_SECURE=True,
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SAMESITE="Lax"
 )
 @app.context_processor
 def inject_translations():
